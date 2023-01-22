@@ -34,27 +34,6 @@ namespace Shipstone.UtilitiesTest.Collections
         }
 
         [TestMethod]
-        public void TestToPaginatedList_Invalid_CountGreaterThanZero_SourceEmpty()
-        {
-            // Arrange
-            int[] array = Array.Empty<int>();
-            IQueryable<int> query = array.AsQueryable();
-
-            // Act
-            ArgumentException ex =
-                Assert.ThrowsException<ArgumentException>(() =>
-                    QueryableExtensions.ToPaginatedList(query, 0, 1));
-
-            // Assert
-            Assert.AreEqual(
-                "source is empty and maxCount is greater than 0 (zero). (Parameter 'maxCount')",
-                ex.Message
-            );
-
-            Assert.AreEqual("maxCount", ex.ParamName);
-        }
-
-        [TestMethod]
         public void TestToPaginatedList_Invalid_CountLessThanZero()
         {
             // Arrange
@@ -334,7 +313,7 @@ namespace Shipstone.UtilitiesTest.Collections
         }
 
         [TestMethod]
-        public void TestToPaginatedList_Valid_SourceEmpty()
+        public void TestToPaginatedList_Valid_SourceEmpty_CountEqualToZero()
         {
             // Arrange
             int[] array = Array.Empty<int>();
@@ -343,6 +322,21 @@ namespace Shipstone.UtilitiesTest.Collections
             // Act
             PaginatedList<int> list =
                 QueryableExtensions.ToPaginatedList(query, 0, 0);
+
+            // Assert
+            list.AssertEqual(array, 0, 0, 0, 1, 0, false, false);
+        }
+
+        [TestMethod]
+        public void TestToPaginatedList_Valid_SourceEmpty_CountGreaterThanZero()
+        {
+            // Arrange
+            int[] array = Array.Empty<int>();
+            IQueryable<int> query = array.AsQueryable();
+
+            // Act
+            PaginatedList<int> list =
+                QueryableExtensions.ToPaginatedList(query, 0, 1);
 
             // Assert
             list.AssertEqual(array, 0, 0, 0, 1, 0, false, false);

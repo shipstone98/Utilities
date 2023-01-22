@@ -64,14 +64,6 @@ namespace Shipstone.Utilities.Collections
                     );
                 }
 
-                if (maxCount > 0)
-                {
-                    throw new ArgumentException(
-                        $"{nameof (source)} is empty and {nameof (maxCount)} is greater than 0 (zero).",
-                        "maxCount"
-                    );
-                }
-
                 array = Array.Empty<T>();
                 pageCount = 1;
             }
