@@ -56,9 +56,20 @@ namespace Shipstone.Utilities.Collections
 
             if (totalCount == 0)
             {
-                if (toSkip > totalCount)
+                if (pageIndex > 0)
                 {
-                    throw new ArgumentException($"{nameof (pageIndex)} and {nameof (maxCount)} do not denote a valid range of elements in {nameof (source)}.");
+                    throw new ArgumentException(
+                        $"{nameof (source)} is empty and {nameof (pageIndex)} is greater than 0 (zero).",
+                        "pageIndex"
+                    );
+                }
+
+                if (maxCount > 0)
+                {
+                    throw new ArgumentException(
+                        $"{nameof (source)} is empty and {nameof (maxCount)} is greater than 0 (zero).",
+                        "maxCount"
+                    );
                 }
 
                 array = Array.Empty<T>();
@@ -69,12 +80,18 @@ namespace Shipstone.Utilities.Collections
             {
                 if (maxCount == 0)
                 {
-                    throw new ArgumentException($"{nameof (source)} is not empty and {nameof (maxCount)} is equal to 0 (zero).");
+                    throw new ArgumentException(
+                        $"{nameof (source)} is not empty and {nameof (maxCount)} is equal to 0 (zero).",
+                        "maxCount"
+                    );
                 }
 
                 if (toSkip >= totalCount)
                 {
-                    throw new ArgumentException($"{nameof (pageIndex)} and {nameof (maxCount)} do not denote a valid range of elements in {nameof (source)}.");
+                    throw new ArgumentException(
+                        $"{nameof (pageIndex)} and {nameof (maxCount)} do not denote a valid range of elements in {nameof (source)}.",
+                        "maxCount"
+                    );
                 }
 
                 array = source

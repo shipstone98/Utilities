@@ -38,7 +38,7 @@ namespace Shipstone.Utilities.Collections
             {
                 throw new ArgumentOutOfRangeException(
                     nameof (index),
-                    $"{nameof (index)} is null."
+                    $"{nameof (index)} is less than 0 (zero)."
                 );
             }
 
@@ -46,13 +46,16 @@ namespace Shipstone.Utilities.Collections
             {
                 throw new ArgumentOutOfRangeException(
                     nameof (count),
-                    $"{nameof (count)} is null."
+                    $"{nameof (count)} is less than 0 (zero)."
                 );
             }
 
             if (index + count > source.Count)
             {
-                throw new ArgumentException($"{nameof (index)} and {nameof (count)} do not denote a valid range of elements in {nameof (source)}.");
+                throw new ArgumentException(
+                    $"{nameof (index)} and {nameof (count)} do not denote a valid range of elements in {nameof (source)}.",
+                    nameof (count)
+                );
             }
             
             if (random is null)

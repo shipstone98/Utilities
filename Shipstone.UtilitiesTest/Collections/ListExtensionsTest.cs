@@ -24,6 +24,11 @@ namespace Shipstone.UtilitiesTest.Collections
                         ListExtensions.Shuffle(array, 0, count));
 
                 // Assert
+                Assert.AreEqual(
+                    "count is less than 0 (zero). (Parameter 'count')",
+                    ex.Message
+                );
+
                 Assert.AreEqual("count", ex.ParamName);
             }
 
@@ -45,6 +50,11 @@ namespace Shipstone.UtilitiesTest.Collections
                         ListExtensions.Shuffle(array, index, 0));
 
                 // Assert
+                Assert.AreEqual(
+                    "index is less than 0 (zero). (Parameter 'index')",
+                    ex.Message
+                );
+
                 Assert.AreEqual("index", ex.ParamName);
             }
 
@@ -63,15 +73,17 @@ namespace Shipstone.UtilitiesTest.Collections
             while (count >= 0)
             {
                 // Act
-                Exception ex = Assert.ThrowsException<ArgumentException>(() =>
-                    ListExtensions.Shuffle(array, index, count));
+                ArgumentException ex =
+                    Assert.ThrowsException<ArgumentException>(() =>
+                        ListExtensions.Shuffle(array, index, count));
 
                 // Assert
                 Assert.AreEqual(
-                    "index and count do not denote a valid range of elements in source.",
+                    "index and count do not denote a valid range of elements in source. (Parameter 'count')",
                     ex.Message
                 );
 
+                Assert.AreEqual("count", ex.ParamName);
                 ++ index;
                 -- count;
             }
@@ -91,6 +103,11 @@ namespace Shipstone.UtilitiesTest.Collections
                     ListExtensions.Shuffle(null as IList<Object>, 0, 0));
 
             // Assert
+            Assert.AreEqual(
+                "source is null. (Parameter 'source')",
+                ex.Message
+            );
+
             Assert.AreEqual("source", ex.ParamName);
         }
 

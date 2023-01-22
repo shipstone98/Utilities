@@ -20,14 +20,38 @@ namespace Shipstone.UtilitiesTest.Collections
             IQueryable<int> query = array.AsQueryable();
 
             // Act
-            Exception ex = Assert.ThrowsException<ArgumentException>(() =>
-                QueryableExtensions.ToPaginatedList(query, 0, 0));
+            ArgumentException ex =
+                Assert.ThrowsException<ArgumentException>(() =>
+                    QueryableExtensions.ToPaginatedList(query, 0, 0));
 
             // Assert
             Assert.AreEqual(
-                "source is not empty and maxCount is equal to 0 (zero).",
+                "source is not empty and maxCount is equal to 0 (zero). (Parameter 'maxCount')",
                 ex.Message
             );
+
+            Assert.AreEqual("maxCount", ex.ParamName);
+        }
+
+        [TestMethod]
+        public void TestToPaginatedList_Invalid_CountGreaterThanZero_SourceEmpty()
+        {
+            // Arrange
+            int[] array = Array.Empty<int>();
+            IQueryable<int> query = array.AsQueryable();
+
+            // Act
+            ArgumentException ex =
+                Assert.ThrowsException<ArgumentException>(() =>
+                    QueryableExtensions.ToPaginatedList(query, 0, 1));
+
+            // Assert
+            Assert.AreEqual(
+                "source is empty and maxCount is greater than 0 (zero). (Parameter 'maxCount')",
+                ex.Message
+            );
+
+            Assert.AreEqual("maxCount", ex.ParamName);
         }
 
         [TestMethod]
@@ -45,8 +69,34 @@ namespace Shipstone.UtilitiesTest.Collections
                         QueryableExtensions.ToPaginatedList(query, 0, count));
 
                 // Assert
+                Assert.AreEqual(
+                    "maxCount is less than 0 (zero). (Parameter 'maxCount')",
+                    ex.Message
+                );
+
                 Assert.AreEqual("maxCount", ex.ParamName);
             }
+        }
+
+        [TestMethod]
+        public void TestToPaginatedList_Invalid_IndexGreaterThanZero_SourceEmpty()
+        {
+            // Arrange
+            int[] array = Array.Empty<int>();
+            IQueryable<int> query = array.AsQueryable();
+
+            // Act
+            ArgumentException ex =
+                Assert.ThrowsException<ArgumentException>(() =>
+                    QueryableExtensions.ToPaginatedList(query, 1, 0));
+
+            // Assert
+            Assert.AreEqual(
+                "source is empty and pageIndex is greater than 0 (zero). (Parameter 'pageIndex')",
+                ex.Message
+            );
+
+            Assert.AreEqual("pageIndex", ex.ParamName);
         }
 
         [TestMethod]
@@ -64,6 +114,11 @@ namespace Shipstone.UtilitiesTest.Collections
                         QueryableExtensions.ToPaginatedList(query, index, 0));
 
                 // Assert
+                Assert.AreEqual(
+                    "pageIndex is less than 0 (zero). (Parameter 'pageIndex')",
+                    ex.Message
+                );
+
                 Assert.AreEqual("pageIndex", ex.ParamName);
             }
         }
@@ -85,18 +140,21 @@ namespace Shipstone.UtilitiesTest.Collections
             foreach (Tuple<int, int> index in indices)
             {
                 // Act
-                Exception ex = Assert.ThrowsException<ArgumentException>(() =>
-                    QueryableExtensions.ToPaginatedList(
-                        query,
-                        index.Item1,
-                        index.Item2
-                    ));
+                ArgumentException ex =
+                    Assert.ThrowsException<ArgumentException>(() =>
+                        QueryableExtensions.ToPaginatedList(
+                            query,
+                            index.Item1,
+                            index.Item2
+                        ));
 
                 // Assert
                 Assert.AreEqual(
-                    "pageIndex and maxCount do not denote a valid range of elements in source.",
+                    "pageIndex and maxCount do not denote a valid range of elements in source. (Parameter 'maxCount')",
                     ex.Message
                 );
+
+                Assert.AreEqual("maxCount", ex.ParamName);
             }
         }
 
@@ -109,6 +167,11 @@ namespace Shipstone.UtilitiesTest.Collections
                     QueryableExtensions.ToPaginatedList<Object>(null, 0, 0));
 
             // Assert
+            Assert.AreEqual(
+                "source is null. (Parameter 'source')",
+                ex.Message
+            );
+
             Assert.AreEqual("source", ex.ParamName);
         }
 #endregion
