@@ -269,6 +269,21 @@ namespace Shipstone.UtilitiesTest.Collections
                 true
             );
         }
+
+        [TestMethod]
+        public void TestToPaginatedList_Valid_SourceEmpty()
+        {
+            // Arrange
+            int[] array = Array.Empty<int>();
+            IQueryable<int> query = array.AsQueryable();
+
+            // Act
+            PaginatedList<int> list =
+                QueryableExtensions.ToPaginatedList(query, 0, 0);
+
+            // Assert
+            list.AssertEqual(array, 0, 0, 0, 1, 0, false, false);
+        }
 #endregion
 #endregion
     }

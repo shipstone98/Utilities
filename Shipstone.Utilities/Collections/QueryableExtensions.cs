@@ -50,27 +50,40 @@ namespace Shipstone.Utilities.Collections
             }
 
             int totalCount = source.Count();
-
-            if (totalCount > 0 && maxCount == 0)
-            {
-                throw new ArgumentException($"{nameof (source)} is not empty and {nameof (maxCount)} is equal to 0 (zero).");
-            }
-
+            int pageCount;
+            T[] array;
             int toSkip = pageIndex * maxCount;
 
-            if (toSkip >= totalCount)
+            if (totalCount == 0)
             {
-                throw new ArgumentException($"{nameof (pageIndex)} and {nameof (maxCount)} do not denote a valid range of elements in {nameof (source)}.");
+                if (toSkip > totalCount)
+                {
+                    throw new ArgumentException($"{nameof (pageIndex)} and {nameof (maxCount)} do not denote a valid range of elements in {nameof (source)}.");
+                }
+
+                array = Array.Empty<T>();
+                pageCount = 1;
             }
 
-            T[] array = source
-                .Skip(toSkip)
-                .Take(maxCount)
-                .ToArray();
+            else
+            {
+                if (maxCount == 0)
+                {
+                    throw new ArgumentException($"{nameof (source)} is not empty and {nameof (maxCount)} is equal to 0 (zero).");
+                }
 
-            int pageCount = maxCount == 0
-                ? 1
-                : (int) Math.Ceiling(totalCount / (double) maxCount);
+                if (toSkip >= totalCount)
+                {
+                    throw new ArgumentException($"{nameof (pageIndex)} and {nameof (maxCount)} do not denote a valid range of elements in {nameof (source)}.");
+                }
+
+                array = source
+                    .Skip(toSkip)
+                    .Take(maxCount)
+                    .ToArray();
+
+                pageCount = (int) Math.Ceiling(totalCount / (double) maxCount);
+            }
 
             return new PaginatedList<T>(
                 array,
